@@ -1,14 +1,21 @@
 package com.sensorsdata.analytics.sensorsanalyticsflutterplugin;
 
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+
 import com.sensorsdata.analytics.android.sdk.SALog;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
+
 import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Collection;
@@ -18,14 +25,9 @@ import java.util.HashSet;
  * Sensors Analytics Flutter Plugin
  **/
 
-public class SensorsAnalyticsFlutterPlugin implements MethodCallHandler {
+public class SensorsAnalyticsFlutterPlugin implements FlutterPlugin, MethodCallHandler {
 
     private static final String TAG = "SA.SensorsAnalyticsFlutterPlugin";
-
-    public static void registerWith(Registrar registrar) {
-        final MethodChannel channel = new MethodChannel(registrar.messenger(), "sensors_analytics_flutter_plugin");
-        channel.setMethodCallHandler(new SensorsAnalyticsFlutterPlugin());
-    }
 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
@@ -258,4 +260,14 @@ public class SensorsAnalyticsFlutterPlugin implements MethodCallHandler {
         return eventName;
     }
 
+    @Override
+    public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+        final MethodChannel channel = new MethodChannel(binding.getBinaryMessenger(), "sensors_analytics_flutter_plugin");
+        channel.setMethodCallHandler(this);
+    }
+
+    @Override
+    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+
+    }
 }
